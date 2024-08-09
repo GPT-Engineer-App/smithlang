@@ -3,7 +3,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const fetchTraces = async (apiEndpoint, apiToken) => {
-  const response = await fetch(`${apiEndpoint}/traces`, {
+  const query = encodeURIComponent('{name="ChatAnthropic.chat"} | select(.gen_ai.completion.0.content, .gen_ai.prompt.1.content)');
+  const response = await fetch(`${apiEndpoint}/api/search?q=${query}`, {
     headers: {
       'Authorization': `Bearer ${apiToken}`,
     },
@@ -33,18 +34,16 @@ const TracesTable = ({ apiEndpoint, apiToken }) => {
           <TableHeader>
             <TableRow>
               <TableHead>Trace ID</TableHead>
-              <TableHead>Service Name</TableHead>
-              <TableHead>Operation Name</TableHead>
-              <TableHead>Duration (ms)</TableHead>
+              <TableHead>Prompt</TableHead>
+              <TableHead>Completion</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {traces.map((trace) => (
+            {traces.traces.map((trace) => (
               <TableRow key={trace.traceID}>
                 <TableCell>{trace.traceID}</TableCell>
-                <TableCell>{trace.serviceName}</TableCell>
-                <TableCell>{trace.operationName}</TableCell>
-                <TableCell>{trace.durationMs}</TableCell>
+                <TableCell>{trace.spanSets[0].attributes['.gen_ai.prompt.1.content']}</TableCell>
+                <TableCell>{trace.spanSets[0].attributes['.gen_ai.completion.0.content']}</TableCell>
               </TableRow>
             ))}
           </TableBody>

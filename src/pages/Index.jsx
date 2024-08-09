@@ -2,25 +2,39 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import TracesTable from '../components/TracesTable';
 
 const Index = () => {
   const [apiEndpoint, setApiEndpoint] = useState('');
   const [apiToken, setApiToken] = useState('');
   const [isConfigured, setIsConfigured] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!apiEndpoint.includes('/api')) {
+      setError('API Endpoint should include "/api" in the URL.');
+      return;
+    }
+    setError('');
     setIsConfigured(true);
+  };
+
+  const handleReset = () => {
+    setApiEndpoint('');
+    setApiToken('');
+    setIsConfigured(false);
+    setError('');
   };
 
   return (
     <div className="min-h-screen p-8 bg-gray-100">
-      <h1 className="text-4xl font-bold mb-8 text-center">Smithlang</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">Smithlang Trace Viewer</h1>
       {!isConfigured ? (
         <Card className="max-w-md mx-auto">
           <CardHeader>
-            <CardTitle>Configure Grafana Cloud API</CardTitle>
+            <CardTitle>Configure Grafana Tempo API</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -46,12 +60,20 @@ const Index = () => {
                   required
                 />
               </div>
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
               <Button type="submit" className="w-full">Configure</Button>
             </form>
           </CardContent>
         </Card>
       ) : (
-        <TracesTable apiEndpoint={apiEndpoint} apiToken={apiToken} />
+        <>
+          <Button onClick={handleReset} className="mb-4">Reset Configuration</Button>
+          <TracesTable apiEndpoint={apiEndpoint} apiToken={apiToken} />
+        </>
       )}
     </div>
   );
