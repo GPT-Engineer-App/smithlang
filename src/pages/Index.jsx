@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,17 +11,31 @@ const Index = () => {
   const [isConfigured, setIsConfigured] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    const savedApiEndpoint = localStorage.getItem('apiEndpoint');
+    const savedApiToken = localStorage.getItem('apiToken');
+    if (savedApiEndpoint && savedApiToken) {
+      setApiEndpoint(savedApiEndpoint);
+      setApiToken(savedApiToken);
+      setIsConfigured(true);
+    }
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!apiEndpoint.includes('/api')) {
       setError('API Endpoint should include "/api" in the URL.');
       return;
     }
+    localStorage.setItem('apiEndpoint', apiEndpoint);
+    localStorage.setItem('apiToken', apiToken);
     setError('');
     setIsConfigured(true);
   };
 
   const handleReset = () => {
+    localStorage.removeItem('apiEndpoint');
+    localStorage.removeItem('apiToken');
     setApiEndpoint('');
     setApiToken('');
     setIsConfigured(false);
