@@ -48,17 +48,17 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gray-100">
-      <h1 className="text-4xl font-bold mb-8 text-center">Smithlang Trace Viewer</h1>
+    <div className="min-h-screen p-8 bg-gray-900 text-gray-100">
+      <h1 className="text-4xl font-bold mb-8 text-center text-blue-400">Smithlang Trace Viewer</h1>
       {!isConfigured ? (
-        <Card className="max-w-md mx-auto">
+        <Card className="max-w-md mx-auto bg-gray-800 border-gray-700">
           <CardHeader>
-            <CardTitle>Configure Grafana Tempo API</CardTitle>
+            <CardTitle className="text-blue-400">Configure Grafana Tempo API</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="apiEndpoint" className="block text-sm font-medium text-gray-700">API Endpoint</label>
+                <label htmlFor="apiEndpoint" className="block text-sm font-medium text-gray-300">API Endpoint</label>
                 <Input
                   id="apiEndpoint"
                   type="text"
@@ -69,7 +69,7 @@ const Index = () => {
                 />
               </div>
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-300">Username</label>
                 <Input
                   id="username"
                   type="text"
@@ -77,10 +77,11 @@ const Index = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Your Grafana Cloud username"
                   required
+                  className="bg-gray-700 text-gray-100 border-gray-600"
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-300">Password</label>
                 <Input
                   id="password"
                   type="password"
@@ -95,13 +96,13 @@ const Index = () => {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              <Button type="submit" className="w-full">Configure</Button>
+              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">Configure</Button>
             </form>
           </CardContent>
         </Card>
       ) : (
         <>
-          <Button onClick={handleReset} className="mb-4">Reset Configuration</Button>
+          <Button onClick={handleReset} className="mb-4 bg-red-600 hover:bg-red-700 text-white">Reset Configuration</Button>
           <TracesTable apiEndpoint={apiEndpoint} username={username} password={password} />
         </>
       )}

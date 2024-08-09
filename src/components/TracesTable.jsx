@@ -73,15 +73,15 @@ const TracesTable = ({ apiEndpoint, username, password }) => {
 };
 
 const renderTracesTable = (traces, isMockData) => (
-  <Card>
+  <Card className="bg-gray-800 border-gray-700">
     <CardHeader>
-      <CardTitle>
-        Traces {isMockData && <span className="text-sm font-normal text-muted-foreground">(Mock Data)</span>}
+      <CardTitle className="text-blue-400">
+        Traces {isMockData && <span className="text-sm font-normal text-gray-400">(Mock Data)</span>}
       </CardTitle>
     </CardHeader>
     <CardContent>
       {isMockData && (
-        <Alert className="mb-4">
+        <Alert className="mb-4 bg-yellow-900 border-yellow-800 text-yellow-100">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Using Mock Data</AlertTitle>
           <AlertDescription>
@@ -91,18 +91,18 @@ const renderTracesTable = (traces, isMockData) => (
       )}
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Trace ID</TableHead>
-            <TableHead>Prompt</TableHead>
-            <TableHead>Completion</TableHead>
+          <TableRow className="border-b border-gray-700">
+            <TableHead className="text-gray-300">Trace ID</TableHead>
+            <TableHead className="text-gray-300">Prompt</TableHead>
+            <TableHead className="text-gray-300">Completion</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {traces.map((trace) => (
-            <TableRow key={trace.traceID}>
-              <TableCell>{trace.traceID}</TableCell>
-              <TableCell>{trace.spanSets[0].attributes['.gen_ai.prompt.1.content']}</TableCell>
-              <TableCell>{trace.spanSets[0].attributes['.gen_ai.completion.0.content']}</TableCell>
+            <TableRow key={trace.traceID} className="border-b border-gray-700">
+              <TableCell className="text-gray-300">{trace.traceID}</TableCell>
+              <TableCell className="text-gray-300">{trace.spanSets[0].attributes['.gen_ai.prompt.1.content']}</TableCell>
+              <TableCell className="text-gray-300">{trace.spanSets[0].attributes['.gen_ai.completion.0.content']}</TableCell>
             </TableRow>
           ))}
         </TableBody>
