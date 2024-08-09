@@ -26,9 +26,8 @@ const Index = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!apiEndpoint.includes('/api')) {
-      setError('API Endpoint should include "/api" in the URL.');
-      return;
+    if (apiEndpoint.endsWith('/')) {
+      setApiEndpoint(apiEndpoint.slice(0, -1));
     }
     localStorage.setItem('apiEndpoint', apiEndpoint);
     localStorage.setItem('username', username);
@@ -65,7 +64,7 @@ const Index = () => {
                   type="text"
                   value={apiEndpoint}
                   onChange={(e) => setApiEndpoint(e.target.value)}
-                  placeholder="https://your-grafana-cloud-instance.com/api"
+                  placeholder="https://your-grafana-cloud-instance.com"
                   required
                 />
               </div>

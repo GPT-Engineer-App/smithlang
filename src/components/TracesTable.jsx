@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const fetchTraces = async (apiEndpoint, username, password) => {
   const query = encodeURIComponent('{name="ChatAnthropic.chat"} | select(.gen_ai.completion.0.content, .gen_ai.prompt.1.content)');
-  const response = await fetch(`${apiEndpoint}/api/search?q=${query}`, {
+  const response = await fetch(`${apiEndpoint}/tempo/api/search?q=${query}`, {
     headers: {
       'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
     },
