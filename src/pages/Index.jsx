@@ -7,16 +7,19 @@ import TracesTable from '../components/TracesTable';
 
 const Index = () => {
   const [apiEndpoint, setApiEndpoint] = useState('');
-  const [apiToken, setApiToken] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [isConfigured, setIsConfigured] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     const savedApiEndpoint = localStorage.getItem('apiEndpoint');
-    const savedApiToken = localStorage.getItem('apiToken');
-    if (savedApiEndpoint && savedApiToken) {
+    const savedUsername = localStorage.getItem('username');
+    const savedPassword = localStorage.getItem('password');
+    if (savedApiEndpoint && savedUsername && savedPassword) {
       setApiEndpoint(savedApiEndpoint);
-      setApiToken(savedApiToken);
+      setUsername(savedUsername);
+      setPassword(savedPassword);
       setIsConfigured(true);
     }
   }, []);
@@ -28,16 +31,19 @@ const Index = () => {
       return;
     }
     localStorage.setItem('apiEndpoint', apiEndpoint);
-    localStorage.setItem('apiToken', apiToken);
+    localStorage.setItem('username', username);
+    localStorage.setItem('password', password);
     setError('');
     setIsConfigured(true);
   };
 
   const handleReset = () => {
     localStorage.removeItem('apiEndpoint');
-    localStorage.removeItem('apiToken');
+    localStorage.removeItem('username');
+    localStorage.removeItem('password');
     setApiEndpoint('');
-    setApiToken('');
+    setUsername('');
+    setPassword('');
     setIsConfigured(false);
     setError('');
   };
@@ -64,13 +70,24 @@ const Index = () => {
                 />
               </div>
               <div>
-                <label htmlFor="apiToken" className="block text-sm font-medium text-gray-700">API Token</label>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
                 <Input
-                  id="apiToken"
+                  id="username"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Your Grafana Cloud username"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                <Input
+                  id="password"
                   type="password"
-                  value={apiToken}
-                  onChange={(e) => setApiToken(e.target.value)}
-                  placeholder="Your Grafana Cloud API token"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Your Grafana Cloud password"
                   required
                 />
               </div>
@@ -86,7 +103,7 @@ const Index = () => {
       ) : (
         <>
           <Button onClick={handleReset} className="mb-4">Reset Configuration</Button>
-          <TracesTable apiEndpoint={apiEndpoint} apiToken={apiToken} />
+          <TracesTable apiEndpoint={apiEndpoint} username={username} password={password} />
         </>
       )}
     </div>

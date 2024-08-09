@@ -2,11 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const fetchTraces = async (apiEndpoint, apiToken) => {
+const fetchTraces = async (apiEndpoint, username, password) => {
   const query = encodeURIComponent('{name="ChatAnthropic.chat"} | select(.gen_ai.completion.0.content, .gen_ai.prompt.1.content)');
   const response = await fetch(`${apiEndpoint}/api/search?q=${query}`, {
     headers: {
-      'Authorization': `Bearer ${apiToken}`,
+      'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
     },
   });
   if (!response.ok) {
@@ -15,10 +15,10 @@ const fetchTraces = async (apiEndpoint, apiToken) => {
   return response.json();
 };
 
-const TracesTable = ({ apiEndpoint, apiToken }) => {
+const TracesTable = ({ apiEndpoint, username, password }) => {
   const { data: traces, isLoading, error } = useQuery({
-    queryKey: ['traces', apiEndpoint, apiToken],
-    queryFn: () => fetchTraces(apiEndpoint, apiToken),
+    queryKey: ['traces', apiEndpoint, username, password],
+    queryFn: () => fetchTraces(apiEndpoint, username, password),
   });
 
   if (isLoading) return <div>Loading traces...</div>;
