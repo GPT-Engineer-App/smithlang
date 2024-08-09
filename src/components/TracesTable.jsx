@@ -6,15 +6,21 @@ import { AlertCircle } from "lucide-react";
 
 const fetchTraces = async (apiEndpoint, username, password) => {
   const query = encodeURIComponent('{name="ChatAnthropic.chat"} | select(.gen_ai.completion.0.content, .gen_ai.prompt.1.content)');
-  const response = await fetch(`${apiEndpoint}/tempo/api/search?q=${query}`, {
-    headers: {
-      'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
-    },
-  });
-  if (!response.ok) {
-    throw new Error('Failed to fetch traces');
+  try {
+    const response = await fetch(`${apiEndpoint}/tempo/api/search?q=${query}`, {
+      headers: {
+        'Authorization': `Basic ${btoa(`${username}:${password}`)}`,
+      },
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to fetch traces: ${response.status} ${response.statusText}. ${errorText}`);
+    }
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching traces:', error);
+    throw error;
   }
-  return response.json();
 };
 
 const TracesTable = ({ apiEndpoint, username, password }) => {
@@ -30,9 +36,10 @@ const TracesTable = ({ apiEndpoint, username, password }) => {
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Error</AlertTitle>
         <AlertDescription>
-          Failed to load traces. Please check your API configuration and try again.
-          <br />
-          Error details: {error.message}
+          <p>Failed to load traces. Please check your API configuration and try again.</p>
+          <p className="mt-2 font-mono text-sm bg-red-100 p-2 rounded">
+            Error details: {error.message}
+          </p>
         </AlertDescription>
       </Alert>
     );
